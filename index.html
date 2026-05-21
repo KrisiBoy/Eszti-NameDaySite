@@ -1,25 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boldog Névnapot, Eszti! ❤️</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Boldog Névnapot, Szerelmem! ❤️</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <audio id="bgMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-    </audio>
+    <div class="confetti-container" id="confetti-container"></div>
+    <div class="heart-container" id="heart-container"></div>
 
-    <div class="cursor-container" id="heart-container"></div>
-    
-    <div class="giraffe" id="giraffe">🦒</div>
+    <div class="giraffe-peeker" id="giraffe-peeker"></div>
 
-    <main class="container">
+    <div class="giraffe-family" id="giraffe-family">
+        <div class="speech-bubble" id="speech-bubble">Szeretlek! ❤️</div>
+        <div class="family-member parent-1">🦒</div>
+        <div class="family-member parent-2">🦒</div>
+        <div class="family-member baby">🦒</div>
+    </div>
+
+    <main class="main-wrapper">
         <div class="card">
-            <h1>Boldog Névnapot, Eszti! 🌸</h1>
-            <p>Wishing you the happiest day, full of color and love.</p>
-            <button id="musicBtn">Play Our Song 🎵</button>
+            <h1>Boldog Névnapot, Szerelmem! 🎉</h1>
+            <p>Ez a mai nap csak rólad szól. Ragyogjon be a mai ünneped csupa vidámsággal, boldogsággal és csillogással!</p>
+        </div>
+
+        <div class="gallery-container" id="gallery-container">
+            <div class="polaroid p1 active">
+                <img src="Photos/Photo1.jfif" alt="Eszti és Te 1">
+                <div class="caption">A legszebb mosoly 🥰</div>
+            </div>
+            <div class="polaroid p2">
+                <img src="Photos/Photo2.jfif" alt="Eszti és Te 2">
+                <div class="caption">Együtt a legjobb ❤️</div>
+            </div>
+            <div class="polaroid p3">
+                <img src="Photos/Photo3.jfif" alt="Eszti és Te 3">
+                <div class="caption">Közös emlékek ✨</div>
+            </div>
+            <div class="polaroid p4">
+                <img src="Photos/Photo4.jfif" alt="Eszti és Te 4">
+                <div class="caption">Mindig csak Te! 💖</div>
+            </div>
         </div>
     </main>
 
