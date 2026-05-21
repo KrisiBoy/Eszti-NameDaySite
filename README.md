@@ -11,7 +11,7 @@ This repository contains a single-page HTML/CSS/JavaScript site featuring a glas
 - `index.html` — Page markup
 - `style.css` — Styles, layout and animations
 - `script.js` — Heart spawning and giraffe behavior
-- `.gitignore` — Excludes `Photos/` from Git
+- `.gitignore`
 
 ## Features
 
