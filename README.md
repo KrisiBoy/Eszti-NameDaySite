@@ -1,29 +1,32 @@
 # Eszti's site
 
-A celebratory static landing page built for Eszti's birthday.
+A small, celebratory static landing page made for Eszti's birthday.
 
 ## Overview
 
-This project is a small HTML/CSS/JavaScript site with a glassy hero section, floating hearts, and a playful giraffe peek animation. It is designed to run as a standalone static page.
+This repository contains a single-page HTML/CSS/JavaScript site featuring a glassy hero card, floating and static hearts, and a playful giraffe peek animation. It's intended for local preview or simple static hosting.
 
 ## Files
 
-- `index.html` — Main page markup and page structure
-- `style.css` — Layout, colors, typography, and animation styling
-- `script.js` — Heart animations and giraffe behavior
-- `.gitignore` — Ignores the `Photos/` folder and its contents from Git
+- `index.html` — Page markup
+- `style.css` — Styles, layout and animations
+- `script.js` — Heart spawning and giraffe behavior
+- `.gitignore` — Excludes `Photos/` from Git
 
-## Usage
+## Features
 
-Open the site locally by double-clicking `index.html` or serving the directory with a simple HTTP server. Example using Python:
+- Glass-like hero panel with large, glassy heading
+- Static decorative hearts around the page and floating hearts animation
+- Giraffe peeker that periodically changes appearance
 
-```bash
-python -m http.server 8000
-```
+## Preview
 
-Then open `http://localhost:8000` in your browser.
+Open (https://krisiboy.github.io/Eszti-s-site/) in your browser.
 
-## Notes
 
-- The `Photos/` folder is excluded from Git using `.gitignore`.
-- The page is optimized for a festive presentation and simple local preview.
+## Contributing & Ideas
+
+If you'd like tweaks (different confetti, larger heading, more animals, or deploy instructions), open an issue or ask here and I can implement them.
+
+---
+Made with ❤️ for Eszti.
