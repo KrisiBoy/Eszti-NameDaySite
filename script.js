@@ -18,68 +18,60 @@ const loveMessages = [
 let currentPhotoIndex = 0;
 let carouselInterval;
 
-// --- FRISSÍTETT: TINDER-LIKE OLDALRA HÚZÁS ANIMÁCIÓ ---
-function startMobileCarousel() {
+// --- TINDER LAPOZÁS MINDEN KÉPERNYŐMÉRETRE ---
+function startGlobalCarousel() {
     if (carouselInterval) clearInterval(carouselInterval);
     
+    const polaroids = document.querySelectorAll('.polaroid');
+    if (polaroids.length > 0 && !document.querySelector('.polaroid.active')) {
+        polaroids[0].classList.add('active');
+        polaroids[0].style.opacity = "1";
+    }
+    
     carouselInterval = setInterval(() => {
-        if (window.innerWidth <= 600) {
-            const polaroids = document.querySelectorAll('.polaroid');
-            if (polaroids.length === 0) return;
+        const polaroids = document.querySelectorAll('.polaroid');
+        if (polaroids.length === 0) return;
 
-            const currentPhoto = polaroids[currentPhotoIndex];
-            currentPhotoIndex = (currentPhotoIndex + 1) % polaroids.length;
-            const nextPhoto = polaroids[currentPhotoIndex];
+        const currentPhoto = polaroids[currentPhotoIndex];
+        currentPhotoIndex = (currentPhotoIndex + 1) % polaroids.length;
+        const nextPhoto = polaroids[currentPhotoIndex];
 
-            // Véletlenszerűen eldönti, hogy balra vagy jobbra suhanjon ki a kép (mint Tinderen)
-            const swipeRight = Math.random() > 0.5;
-            const targetX = swipeRight ? 350 : -350; // Kirepülési távolság pixelben
-            const targetRotation = swipeRight ? 35 : -35; // Dőlésszög repülés közben
+        const swipeRight = Math.random() > 0.5;
+        const targetX = swipeRight ? 380 : -380; 
+        const targetRotation = swipeRight ? 35 : -35; 
 
-            // Aktuális kártya eldobása oldalra
-            gsap.timeline()
-                .to(currentPhoto, { 
-                    x: targetX, 
-                    rotation: targetRotation, 
-                    opacity: 0, 
-                    duration: 0.7, 
-                    ease: "power2.inOut",
-                    onComplete: () => {
-                        currentPhoto.classList.remove('active');
-                        // Visszaállítjuk alaphelyzetbe a háttérben a következő körre
-                        gsap.set(currentPhoto, { x: 0, rotation: 0 });
-                    }
-                });
-            
-            // Következő kártya beúszása a háttérből finom fókuszálással
-            nextPhoto.classList.add('active');
-            gsap.fromTo(nextPhoto, 
-                { opacity: 0, scale: 0.85, rotation: 0, x: 0 }, 
-                { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.2)" }
-            );
-        }
+        gsap.timeline()
+            .to(currentPhoto, { 
+                x: targetX, 
+                rotation: targetRotation, 
+                opacity: 0, 
+                duration: 0.7, 
+                ease: "power2.inOut",
+                onComplete: () => {
+                    currentPhoto.classList.remove('active');
+                    gsap.set(currentPhoto, { x: 0, rotation: 0 });
+                }
+            });
+        
+        nextPhoto.classList.add('active');
+        gsap.fromTo(nextPhoto, 
+            { opacity: 0, scale: 0.85, rotation: 0, x: 0 }, 
+            { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.2)" }
+        );
     }, 3800); 
 }
 
-function checkResponsiveStyles() {
+function checkInitialStyles() {
     const polaroids = document.querySelectorAll('.polaroid');
-    if (window.innerWidth > 600) {
-        polaroids.forEach(p => {
-            p.style.opacity = "";
-            p.style.transform = "";
+    polaroids.forEach((p, idx) => {
+        if(idx === currentPhotoIndex) {
+            p.classList.add('active');
+            p.style.opacity = "1";
+        } else {
             p.classList.remove('active');
-        });
-    } else {
-        polaroids.forEach((p, idx) => {
-            if(idx === currentPhotoIndex) {
-                p.classList.add('active');
-                p.style.opacity = "1";
-            } else {
-                p.classList.remove('active');
-                p.style.opacity = "0";
-            }
-        });
-    }
+            p.style.opacity = "0";
+        }
+    });
 }
 
 function getHeartCountBasedOnScreen() {
@@ -182,21 +174,26 @@ function initStaticPeeker() {
     });
 }
 
-// Sétáló zsiráf család
-let walkTween, bobbingTween;
+// --- FRISSÍTETT: DINAMIKUSAN KÉPERNYŐHÖZ IGAZODÓ SÉTÁLÓ ZSIRÁFOK ---
 function startFamilyWalk() {
     if (walkTween) walkTween.kill();
     if (bobbingTween) bobbingTween.kill();
 
-    const startX = -650; 
-    const endX = window.innerWidth + 1100; 
     const isMobile = window.innerWidth <= 600;
+    
+    // Lekérjük a zsiráfcsapat valós szélességét. Ha még nem renderelődött, adunk egy biztonsági értéket.
+    const familyWidth = family.offsetWidth || (isMobile ? 250 : 450);
+    
+    // MÓDOSÍTÁS: A kezdőpont pontosan a képernyő bal széle mögött van a zsiráfcsapat szélességével eltolva
+    const startX = -familyWidth - 20; 
+    // MÓDOSÍTÁS: A végpont pontosan a képernyő jobb széle után van, így nem gyalogolnak feleslegesen a semmibe
+    const endX = window.innerWidth + 20; 
     
     gsap.set(family, { x: startX });
     
     bobbingTween = gsap.to('.family-member', {
         y: -15, 
-        duration: isMobile ? 0.55 : 0.3, 
+        duration: isMobile ? 0.25 : 0.18, 
         repeat: -1,
         yoyo: true,
         ease: 'sine.inOut'
@@ -204,7 +201,7 @@ function startFamilyWalk() {
 
     walkTween = gsap.to(family, {
         x: endX,
-        duration: isMobile ? 16 : 10, 
+        duration: isMobile ? 15 : 10, 
         ease: 'none',
         onComplete: () => {
             bobbingTween.kill();
@@ -252,7 +249,6 @@ window.addEventListener('resize', () => {
     resizeTimeout = setTimeout(() => {
         spawnDynamicEnvironment();
         startFamilyWalk();
-        checkResponsiveStyles();
     }, 300);
 });
 
@@ -260,7 +256,8 @@ window.addEventListener('resize', () => {
 spawnDynamicEnvironment();
 initStaticPeeker(); 
 startFamilyWalk();
-startMobileCarousel();
+checkInitialStyles();
+startGlobalCarousel(); 
 
 setInterval(cycleHeartfulMessages, 4500);
 createCelebrationConfetti();
