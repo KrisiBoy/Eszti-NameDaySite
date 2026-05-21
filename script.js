@@ -204,11 +204,11 @@ function startFamilyWalk() {
 
     walkTween = gsap.to(family, {
         x: endX,
-        duration: isMobile ? 22 : 12, 
+        duration: isMobile ? 16 : 10, 
         ease: 'none',
         onComplete: () => {
             bobbingTween.kill();
-            setTimeout(startFamilyWalk, 1000); 
+            setTimeout(startFamilyWalk, 50); 
         }
     });
 }
