@@ -147,16 +147,15 @@ body {
     will-change: transform;
 }
 
-/* --- FRISSÍTETT: A KÉPEK FELÉ (BALRA) NÉZŐ ZSIRÁF --- */
+/* --- JOBB OLDALI FIX KUKUCSKÁLÓ ZSIRÁF --- */
 .giraffe-peeker {
     position: fixed;
-    right: 0px;            
+    right: -25px;            
     top: 50%;               
     font-size: clamp(80px, 12vw, 130px);
     z-index: 15;            
     pointer-events: none;
     user-select: none;
-    /* MÓDOSÍTÁS: scaleX(1)-re állítva és -25deg-gel megdöntve, így balra, a fotók felé néz */
     transform: translateY(-50%) scaleX(1) rotate(-25deg);
     will-change: transform;
 }
@@ -217,7 +216,7 @@ body {
     will-change: transform;
 }
 
-/* Reszponzív mobil nézet */
+/* --- RESPONZÍV MOBIL NÉZET (TINDER-LIKE CAROUSEL) --- */
 @media (max-width: 600px) {
     .gallery-container {
         position: relative;
@@ -238,7 +237,8 @@ body {
         pointer-events: none;
         transform: rotate(0deg); 
         animation: none; 
-        transform-origin: left center;
+        /* MÓDOSÍTÁS: A Tinder híváshoz a kártya közepén legyen a forgástengely */
+        transform-origin: center center; 
     }
 
     .polaroid.active {

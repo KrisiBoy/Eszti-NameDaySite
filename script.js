@@ -18,7 +18,7 @@ const loveMessages = [
 let currentPhotoIndex = 0;
 let carouselInterval;
 
-// --- MOBIL 3D LAPOZÓS DIAVETÍTÉS LOGIKA ---
+// --- FRISSÍTETT: TINDER-LIKE OLDALRA HÚZÁS ANIMÁCIÓ ---
 function startMobileCarousel() {
     if (carouselInterval) clearInterval(carouselInterval);
     
@@ -31,23 +31,31 @@ function startMobileCarousel() {
             currentPhotoIndex = (currentPhotoIndex + 1) % polaroids.length;
             const nextPhoto = polaroids[currentPhotoIndex];
 
+            // Véletlenszerűen eldönti, hogy balra vagy jobbra suhanjon ki a kép (mint Tinderen)
+            const swipeRight = Math.random() > 0.5;
+            const targetX = swipeRight ? 350 : -350; // Kirepülési távolság pixelben
+            const targetRotation = swipeRight ? 35 : -35; // Dőlésszög repülés közben
+
+            // Aktuális kártya eldobása oldalra
             gsap.timeline()
                 .to(currentPhoto, { 
-                    rotationY: -110, 
+                    x: targetX, 
+                    rotation: targetRotation, 
                     opacity: 0, 
-                    scale: 0.85, 
-                    duration: 0.8, 
+                    duration: 0.7, 
                     ease: "power2.inOut",
                     onComplete: () => {
                         currentPhoto.classList.remove('active');
-                        gsap.set(currentPhoto, { rotationY: 0, scale: 1 });
+                        // Visszaállítjuk alaphelyzetbe a háttérben a következő körre
+                        gsap.set(currentPhoto, { x: 0, rotation: 0 });
                     }
                 });
             
+            // Következő kártya beúszása a háttérből finom fókuszálással
             nextPhoto.classList.add('active');
             gsap.fromTo(nextPhoto, 
-                { opacity: 0, rotationY: 90, scale: 0.9 }, 
-                { opacity: 1, rotationY: 0, scale: 1, duration: 0.8, ease: "power2.out" }
+                { opacity: 0, scale: 0.85, rotation: 0, x: 0 }, 
+                { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.2)" }
             );
         }
     }, 3800); 
@@ -153,24 +161,20 @@ function spawnDynamicEnvironment() {
     });
 }
 
-// --- ÚJ FUNKCIÓ: STATIKUS, KÍVÁNCSI JOBB OLDALI ZSIRÁF ---
 function initStaticPeeker() {
     if (!peeker) return;
     
-    // Csak a tiszta zsiráf emoji jelenik meg, semmi sallang
     peeker.textContent = "🦒";
     
-    // Finom, lassú, lélegző hatású lebegés, miközben balra-fel tekint
     gsap.to(peeker, {
-        y: "-=12",                  // Enyhe fel-le mozgás a kijelző közepén
-        rotation: "+=3",            // Egy icipici extra dőlés bólogatásképp
-        duration: 3.5,              // Kellemes, komótos tempó
+        y: "-=12",                  
+        rotation: "+=3",            
+        duration: 3.5,              
         repeat: -1,
         yoyo: true,
         ease: "sine.inOut"
     });
     
-    // Elegáns áttűnéssel hozzuk be az oldal betöltésekor
     gsap.to(peeker, {
         opacity: 1,
         duration: 1.5,
@@ -254,7 +258,7 @@ window.addEventListener('resize', () => {
 
 // Inicializálás
 spawnDynamicEnvironment();
-initStaticPeeker(); // Az új, állandó zsiráf elindítása
+initStaticPeeker(); 
 startFamilyWalk();
 startMobileCarousel();
 
