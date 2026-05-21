@@ -18,60 +18,65 @@ const loveMessages = [
 let currentPhotoIndex = 0;
 let carouselInterval;
 
-// --- TINDER LAPOZÁS MINDEN KÉPERNYŐMÉRETRE ---
-function startGlobalCarousel() {
-    if (carouselInterval) clearInterval(carouselInterval);
-    
+// --- DYNAMIC CAROUSEL: CSAK MOBILON FUT ---
+function manageCarouselState() {
     const polaroids = document.querySelectorAll('.polaroid');
-    if (polaroids.length > 0 && !document.querySelector('.polaroid.active')) {
-        polaroids[0].classList.add('active');
-        polaroids[0].style.opacity = "1";
-    }
     
-    carouselInterval = setInterval(() => {
-        const polaroids = document.querySelectorAll('.polaroid');
-        if (polaroids.length === 0) return;
-
-        const currentPhoto = polaroids[currentPhotoIndex];
-        currentPhotoIndex = (currentPhotoIndex + 1) % polaroids.length;
-        const nextPhoto = polaroids[currentPhotoIndex];
-
-        const swipeRight = Math.random() > 0.5;
-        const targetX = swipeRight ? 380 : -380; 
-        const targetRotation = swipeRight ? 35 : -35; 
-
-        gsap.timeline()
-            .to(currentPhoto, { 
-                x: targetX, 
-                rotation: targetRotation, 
-                opacity: 0, 
-                duration: 0.7, 
-                ease: "power2.inOut",
-                onComplete: () => {
-                    currentPhoto.classList.remove('active');
-                    gsap.set(currentPhoto, { x: 0, rotation: 0 });
-                }
-            });
-        
-        nextPhoto.classList.add('active');
-        gsap.fromTo(nextPhoto, 
-            { opacity: 0, scale: 0.85, rotation: 0, x: 0 }, 
-            { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.2)" }
-        );
-    }, 3800); 
-}
-
-function checkInitialStyles() {
-    const polaroids = document.querySelectorAll('.polaroid');
-    polaroids.forEach((p, idx) => {
-        if(idx === currentPhotoIndex) {
-            p.classList.add('active');
-            p.style.opacity = "1";
-        } else {
+    if (window.innerWidth > 600) {
+        // DESKTOP: Minden időzítőt törlünk, statikusan láthatóvá teszünk minden képet
+        if (carouselInterval) clearInterval(carouselInterval);
+        polaroids.forEach(p => {
+            p.style.opacity = "";
+            p.style.transform = "";
             p.classList.remove('active');
-            p.style.opacity = "0";
-        }
-    });
+        });
+    } else {
+        // MOBIL: Elindítjuk a Tinder-szerű lapozást
+        if (carouselInterval) clearInterval(carouselInterval);
+        
+        // Alaphelyzet beállítás mobilon
+        polaroids.forEach((p, idx) => {
+            if(idx === currentPhotoIndex) {
+                p.classList.add('active');
+                p.style.opacity = "1";
+            } else {
+                p.classList.remove('active');
+                p.style.opacity = "0";
+            }
+        });
+
+        carouselInterval = setInterval(() => {
+            const freshPolaroids = document.querySelectorAll('.polaroid');
+            if (freshPolaroids.length === 0) return;
+
+            const currentPhoto = freshPolaroids[currentPhotoIndex];
+            currentPhotoIndex = (currentPhotoIndex + 1) % freshPolaroids.length;
+            const nextPhoto = freshPolaroids[currentPhotoIndex];
+
+            const swipeRight = Math.random() > 0.5;
+            const targetX = swipeRight ? 320 : -320; 
+            const targetRotation = swipeRight ? 30 : -30; 
+
+            gsap.timeline()
+                .to(currentPhoto, { 
+                    x: targetX, 
+                    rotation: targetRotation, 
+                    opacity: 0, 
+                    duration: 0.6, 
+                    ease: "power2.inOut",
+                    onComplete: () => {
+                        currentPhoto.classList.remove('active');
+                        gsap.set(currentPhoto, { x: 0, rotation: 0 });
+                    }
+                });
+            
+            nextPhoto.classList.add('active');
+            gsap.fromTo(nextPhoto, 
+                { opacity: 0, scale: 0.85, x: 0 }, 
+                { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.2)" }
+            );
+        }, 3800);
+    }
 }
 
 function getHeartCountBasedOnScreen() {
@@ -155,7 +160,6 @@ function spawnDynamicEnvironment() {
 
 function initStaticPeeker() {
     if (!peeker) return;
-    
     peeker.textContent = "🦒";
     
     gsap.to(peeker, {
@@ -174,20 +178,15 @@ function initStaticPeeker() {
     });
 }
 
-// --- FRISSÍTETT: DINAMIKUSAN KÉPERNYŐHÖZ IGAZODÓ SÉTÁLÓ ZSIRÁFOK ---
+// --- FOLYAMATOSAN ÉS GYORSAN SÉTÁLÓ ZSIRÁFOK ---
+let walkTween, bobbingTween;
 function startFamilyWalk() {
     if (walkTween) walkTween.kill();
     if (bobbingTween) bobbingTween.kill();
 
     const isMobile = window.innerWidth <= 600;
-    
-    // Lekérjük a zsiráfcsapat valós szélességét. Ha még nem renderelődött, adunk egy biztonsági értéket.
-    const familyWidth = family.offsetWidth || (isMobile ? 250 : 450);
-    
-    // MÓDOSÍTÁS: A kezdőpont pontosan a képernyő bal széle mögött van a zsiráfcsapat szélességével eltolva
-    const startX = -familyWidth - 20; 
-    // MÓDOSÍTÁS: A végpont pontosan a képernyő jobb széle után van, így nem gyalogolnak feleslegesen a semmibe
-    const endX = window.innerWidth + 20; 
+    const startX = isMobile ? -300 : -600; 
+    const endX = window.innerWidth + 100; 
     
     gsap.set(family, { x: startX });
     
@@ -201,7 +200,7 @@ function startFamilyWalk() {
 
     walkTween = gsap.to(family, {
         x: endX,
-        duration: isMobile ? 15 : 10, 
+        duration: isMobile ? 10 : 7, 
         ease: 'none',
         onComplete: () => {
             bobbingTween.kill();
@@ -212,7 +211,6 @@ function startFamilyWalk() {
 
 function cycleHeartfulMessages() {
     bubble.textContent = loveMessages[Math.floor(Math.random() * loveMessages.length)];
-    
     gsap.timeline()
         .to(bubble, { opacity: 1, y: -6, duration: 0.5, ease: 'power2.out' })
         .to(bubble, { opacity: 0, y: 0, duration: 0.5, delay: 3.0, ease: 'power2.in' });
@@ -249,6 +247,7 @@ window.addEventListener('resize', () => {
     resizeTimeout = setTimeout(() => {
         spawnDynamicEnvironment();
         startFamilyWalk();
+        manageCarouselState(); // Átmretezésnél is figyeljük a Tinder állapotát
     }, 300);
 });
 
@@ -256,8 +255,7 @@ window.addEventListener('resize', () => {
 spawnDynamicEnvironment();
 initStaticPeeker(); 
 startFamilyWalk();
-checkInitialStyles();
-startGlobalCarousel(); 
+manageCarouselState(); // Eldönti, hogy indít-e Tindert vagy hagyja statikusan
 
 setInterval(cycleHeartfulMessages, 4500);
 createCelebrationConfetti();

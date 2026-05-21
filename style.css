@@ -83,33 +83,30 @@ body {
     color: rgba(255, 255, 255, 0.95);
 }
 
-/* --- POLAROID GALÉRIA --- */
+/* --- HIBRID GALÉRIA: DESKTOPON STATIKUS, MOBILON TINDER --- */
 .gallery-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 35px;
+    gap: 20px;
     width: 100%;
-    perspective: 1200px; 
-    padding: 10px 20px;
-    transform-style: preserve-3d;
+    margin-top: 20px;
+    perspective: 1000px;
 }
 
 .polaroid {
     background: white;
     padding: 16px 16px 28px 16px;
     border-radius: 4px;
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
-    width: 195px;
-    transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.45s ease;
-    transform: translate3d(0, 0, 0);
-    animation: gentleFloat 6s ease-in-out infinite alternate;
-    transform-origin: center center;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+    width: 220px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    will-change: transform;
 }
 
 .polaroid img {
     width: 100%;
-    height: 175px;
+    height: 200px;
     object-fit: cover;
     border-radius: 2px;
     border: 1px solid #f2f2f2;
@@ -117,26 +114,23 @@ body {
 
 .polaroid .caption {
     font-family: 'Caveat', cursive;
-    font-size: 1.55rem;
+    font-size: 1.5rem;
     color: #333;
     text-align: center;
-    margin-top: 16px;
+    margin-top: 12px;
 }
 
-.p1 { transform: rotate(-8deg); animation-delay: 0s; }
-.p2 { transform: rotate(6deg); animation-delay: 0.6s; }
-.p3 { transform: rotate(-6deg); animation-delay: 1.2s; }
-.p4 { transform: rotate(9deg); animation-delay: 1.8s; }
+/* Desktop statikus finom elforgatások */
+.polaroid.p1 { transform: rotate(-4deg); }
+.polaroid.p2 { transform: rotate(2deg); }
+.polaroid.p3 { transform: rotate(-2deg); }
+.polaroid.p4 { transform: rotate(5deg); }
+.polaroid.p5 { transform: rotate(-3deg); }
 
 .polaroid:hover {
-    transform: scale(1.12) rotate(0deg) translateY(-5px) !important;
-    z-index: 30;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.28);
-}
-
-@keyframes gentleFloat {
-    0% { translateY: 0px; }
-    100% { translateY: -12px; }
+    transform: scale(1.06) rotate(0deg) !important;
+    z-index: 50;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.22);
 }
 
 /* Statikus háttér szívek */
@@ -147,10 +141,10 @@ body {
     will-change: transform;
 }
 
-/* --- JOBB OLDALI FIX KUKUCSKÁLÓ ZSIRÁF --- */
+/* JOBB OLDALI FIX KUKUCSKÁLÓ ZSIRÁF */
 .giraffe-peeker {
     position: fixed;
-    right: -25px;            
+    right: 20px;            
     top: 50%;               
     font-size: clamp(80px, 12vw, 130px);
     z-index: 15;            
@@ -164,7 +158,7 @@ body {
 .giraffe-family {
     position: fixed;
     bottom: -10px;
-    left: -650px; 
+    left: 0; 
     display: flex;
     align-items: flex-end;
     gap: clamp(8px, 2vw, 20px);
@@ -216,53 +210,40 @@ body {
     will-change: transform;
 }
 
-/* --- RESPONZÍV MOBIL NÉZET (TINDER-LIKE CAROUSEL) --- */
+/* --- MOBIL NÉZET: ITT ÁTALAKUL TINDER-PAKLIIRÁNYBA --- */
 @media (max-width: 600px) {
     .gallery-container {
         position: relative;
-        height: 300px; 
-        width: 100%;
-        max-width: 210px; 
+        height: 280px;
+        max-width: 200px;
         margin: 0 auto;
-        padding: 0;
     }
-
     .polaroid {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
-        margin: 0;
-        opacity: 0; 
+        opacity: 0;
         pointer-events: none;
-        transform: rotate(0deg); 
-        animation: none; 
-        /* MÓDOSÍTÁS: A Tinder híváshoz a kártya közepén legyen a forgástengely */
-        transform-origin: center center; 
+        transform: rotate(0deg) !important;
     }
-
     .polaroid.active {
         opacity: 1;
         pointer-events: auto;
     }
-
     .polaroid img {
-        height: 180px;
+        height: 165px;
     }
-    
     .polaroid .caption {
-        font-size: 1.3rem;
-        margin-top: 10px;
+        font-size: 1.25rem;
+        margin-top: 8px;
     }
-
     .static-heart {
         opacity: 0.35 !important;
     }
-
     .speech-bubble {
         top: -75px; 
     }
-    
     .giraffe-peeker {
         right: -15px; 
     }
