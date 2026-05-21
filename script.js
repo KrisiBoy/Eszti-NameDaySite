@@ -200,7 +200,7 @@ function startFamilyWalk() {
 
     walkTween = gsap.to(family, {
         x: endX,
-        duration: isMobile ? 10 : 7, 
+        duration: isMobile ? 7 : 10, 
         ease: 'none',
         onComplete: () => {
             bobbingTween.kill();
