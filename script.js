@@ -208,7 +208,7 @@ function startFamilyWalk() {
         ease: 'none',
         onComplete: () => {
             bobbingTween.kill();
-            setTimeout(startFamilyWalk, 4000); 
+            setTimeout(startFamilyWalk, 1000); 
         }
     });
 }
